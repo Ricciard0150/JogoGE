@@ -115,6 +115,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Crouch();
 		}
 
 		private void LateUpdate()
@@ -246,6 +247,13 @@ namespace StarterAssets
 			}
 		}
 
+		public void Crouch()
+		{
+            if(Input.GetButton("Crouch"))
+            {
+				Debug.Log("ahaha");
+            }
+        }
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
 			if (lfAngle < -360f) lfAngle += 360f;
