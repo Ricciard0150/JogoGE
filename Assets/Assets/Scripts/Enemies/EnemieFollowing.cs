@@ -1,16 +1,31 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemieFollowing : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    public Transform[] pontos;
+    private int pontoAtual = 0;
+    private NavMeshAgent agent;
+
+    void Start()
     {
-        
+        agent = GetComponent<NavMeshAgent>();
+        IrParaProximoPonto();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            IrParaProximoPonto();
+        }
+    }
+
+    void IrParaProximoPonto()
+    {
+        if (pontos.Length == 0) return;
+
+        agent.SetDestination(pontos[pontoAtual].position);
+        pontoAtual = (pontoAtual + 1) % pontos.Length;
     }
 }
