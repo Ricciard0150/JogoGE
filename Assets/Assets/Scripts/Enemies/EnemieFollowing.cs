@@ -17,6 +17,8 @@ public class EnemieFollowing : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = 3f;
+        agent.speed = 2;
         IrParaProximoPonto();
     }
 
@@ -67,4 +69,5 @@ public class EnemieFollowing : MonoBehaviour
 
         return false;
     }
+    
 }

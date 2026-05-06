@@ -5,6 +5,8 @@ public class EnemyStatus : MonoBehaviour, IShootable
     [SerializeField] private GameObject _bloodEffect;
     [SerializeField] float _lifeMax = 2;
     private float _currentLife;
+
+    private bool isColliding;
     public void Hitted(float damage, Vector3 shootPoint)
     {
         _currentLife -= damage;
@@ -20,5 +22,14 @@ public class EnemyStatus : MonoBehaviour, IShootable
     void Start()
     {
         _currentLife = _lifeMax;
+       
+    }
+    public void OnCollisionEnter(Collision collision)
+    {
+       if(collision.gameObject.TryGetComponent(out IDamageable dameageble))
+        {
+            dameageble.Damage(20);
+            print("collided");
+        }
     }
 }

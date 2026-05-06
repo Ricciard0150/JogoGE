@@ -26,10 +26,7 @@ public class PlayerLife : MonoBehaviour, IDamageable
         }
     }
 
-    public void Damage(float damage)
-    {
-        throw new System.NotImplementedException();
-    }
+
 
     //IEnumerator DamageFeedback()
     //{

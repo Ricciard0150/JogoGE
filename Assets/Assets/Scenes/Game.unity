@@ -1506,7 +1506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LifeSlider
   slider: {fileID: 1364343615}
-  player: {fileID: 2921003716932192008}
+  player: {fileID: 135756641613574990}
 --- !u!114 &1364343615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1831,7 +1831,7 @@ Transform:
   m_GameObject: {fileID: 1834557068}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.51, y: 0.35800004, z: 19.5}
+  m_LocalPosition: {x: -0.51, y: 0.35800004, z: 21.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2449,6 +2449,49 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1259393970806028190, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
   m_PrefabInstance: {fileID: 2921003716932192005}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &135756641613574989
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236040159}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 90
+  m_CollisionDetection: 0
+--- !u!114 &135756641613574990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236040159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88dac2faef6648743a2b9e9f797226a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLife
+  life: 100
+  lifeMax: 100
+  respawnPoint: {fileID: 602256152}
+  defeatScreen: {fileID: 286980493}
 --- !u!1 &2114283753834967212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2697,15 +2740,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6046263763443408079, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2921003716932192007}
-    - targetCorrespondingSourceObject: {fileID: 6046263763443408079, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2921003716932192008}
     - targetCorrespondingSourceObject: {fileID: 1887453031966518564, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
       insertIndex: -1
       addedObject: {fileID: 135756641613574980}
     - targetCorrespondingSourceObject: {fileID: 1887453031966518564, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
       insertIndex: -1
       addedObject: {fileID: 135756641613574981}
+    - targetCorrespondingSourceObject: {fileID: 1887453031966518564, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 135756641613574989}
+    - targetCorrespondingSourceObject: {fileID: 1887453031966518564, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 135756641613574990}
   m_SourcePrefab: {fileID: 100100000, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
 --- !u!1 &2921003716932192006 stripped
 GameObject:
@@ -2739,22 +2785,6 @@ MonoBehaviour:
     _clipSize: 5
     _reloadTime: 1
     _hasScope: 0
---- !u!114 &2921003716932192008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2921003716932192006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88dac2faef6648743a2b9e9f797226a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerLife
-  life: 100
-  lifeMax: 100
-  respawnPoint: {fileID: 602256152}
-  defeatScreen: {fileID: 286980493}
 --- !u!1001 &3822174323834651274
 PrefabInstance:
   m_ObjectHideFlags: 0
