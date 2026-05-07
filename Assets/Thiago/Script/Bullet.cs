@@ -4,28 +4,17 @@ public class Bullet : MonoBehaviour
 {
     public int damage = 10;
 
-    void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        // IGNORA INIMIGO
-        if (other.CompareTag("Enemy"))
-            return;
+        // PROCURA VIDA NO PLAYER
+        PlayerHealth health =
+            collision.collider.GetComponentInParent<PlayerHealth>();
 
-        // PROCURA PLAYER HEALTH NA CENA
-        PlayerHealth health = FindObjectOfType<PlayerHealth>();
-
-        // SE ACERTOU PLAYER
-        if (other.CompareTag("Player"))
+        if (health != null)
         {
-            if (health != null)
-            {
-                health.TakeDamage(damage);
+            health.TakeDamage(damage);
 
-                Debug.Log("BALA DEU DANO");
-            }
-            else
-            {
-                Debug.LogError("PlayerHealth não encontrado!");
-            }
+            Debug.Log("BALA DEU DANO");
         }
 
         Destroy(gameObject);
