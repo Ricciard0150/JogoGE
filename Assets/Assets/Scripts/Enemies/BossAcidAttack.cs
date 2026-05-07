@@ -9,12 +9,13 @@ public class BossAcidAttack : MonoBehaviour
     public float shootForce = 25f;
 
     private void Update()
-{
-    if (Input.GetKeyDown(KeyCode.Space))
     {
-        ShootAcid();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ShootAcid();
+        }
     }
-}
+
     public void ShootAcid()
     {
         GameObject acid = Instantiate(
@@ -25,6 +26,8 @@ public class BossAcidAttack : MonoBehaviour
 
         Rigidbody rb = acid.GetComponent<Rigidbody>();
 
-        rb.linearVelocity = playerPoint.forward * shootForce;
+        Vector3 direcao = (playerPoint.position - shootPoint.position).normalized;
+
+        rb.linearVelocity = direcao * shootForce;
     }
 }
