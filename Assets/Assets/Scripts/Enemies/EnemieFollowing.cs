@@ -24,6 +24,10 @@ public class EnemieFollowing : MonoBehaviour
 
     void Update()
     {
+        // verifica se o agent está funcionando
+        if (!agent.enabled || !agent.isOnNavMesh)
+            return;
+
         if (CanSeePlayer())
         {
             chasing = true;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BossGroundSlam : MonoBehaviour
+public class BossAnimation : MonoBehaviour
 {
     [Header("Referências")]
     public Transform player;
@@ -14,12 +14,12 @@ public class BossGroundSlam : MonoBehaviour
     public float viewAngle = 90f;
 
     [Header("Pulo")]
-    public float jumpHeight = 6f;
+    public float jumpHeight = 5f;
     public float jumpForwardForce = 3f;
     public float cooldown = 4f;
 
     [Header("Dano")]
-    public float damageRadius = 6f;
+    public float damageRadius = 5f;
     public int damage = 20;
 
     private bool jumping;
@@ -30,14 +30,14 @@ public class BossGroundSlam : MonoBehaviour
         if (player == null)
             return;
 
-        // evita erro do navmesh
+        // segurança navmesh
         if (!agent.enabled || !agent.isOnNavMesh)
             return;
 
         // animação de andar
         anim.SetBool("Walking", agent.velocity.magnitude > 0.1f);
 
-        // pula somente vendo o player
+        // ataque
         if (CanSeePlayer() && !jumping && canJump)
         {
             JumpAttack();
@@ -57,21 +57,18 @@ public class BossGroundSlam : MonoBehaviour
 
         // direção do player
         Vector3 dir = (player.position - transform.position).normalized;
-
-        // remove inclinação
         dir.y = 0;
 
         // força
         Vector3 force = dir * jumpForwardForce;
         force.y = jumpHeight;
 
-        // aplica velocidade
+        // aplica no rigidbody
         rb.linearVelocity = force;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // bateu no chão
         if (jumping && collision.gameObject.CompareTag("Floor"))
         {
             Slam();
@@ -82,7 +79,6 @@ public class BossGroundSlam : MonoBehaviour
     {
         jumping = false;
 
-        // para movimento
         rb.linearVelocity = Vector3.zero;
 
         // dano em área
@@ -98,10 +94,8 @@ public class BossGroundSlam : MonoBehaviour
             }
         }
 
-        // reativa navmesh
+        // volta navmesh
         agent.enabled = true;
-
-        // reposiciona no navmesh
         agent.Warp(transform.position);
 
         Invoke(nameof(ResetJump), cooldown);
@@ -118,23 +112,18 @@ public class BossGroundSlam : MonoBehaviour
 
         float distance = dir.magnitude;
 
-        // longe demais
         if (distance > viewDistance)
             return false;
 
-        // ângulo de visão
         float angle = Vector3.Angle(transform.forward, dir);
 
         if (angle > viewAngle / 2)
             return false;
 
-        // verifica paredes
         if (Physics.Linecast(transform.position + Vector3.up, player.position, out RaycastHit hit))
         {
             if (hit.transform == player)
-            {
                 return true;
-            }
         }
 
         return false;
@@ -142,11 +131,9 @@ public class BossGroundSlam : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // raio de dano
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, damageRadius);
 
-        // visão
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, viewDistance);
     }
