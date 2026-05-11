@@ -72,6 +72,7 @@ public class EnemieFollowing : MonoBehaviour
 
     bool CanSeePlayer()
     {
+        
         if (player == null)
             return false;
 
@@ -94,6 +95,8 @@ public class EnemieFollowing : MonoBehaviour
         {
             if (hit.transform == player)
             {
+                Debug.Log("aaaa");
+
                 return true;
             }
         }

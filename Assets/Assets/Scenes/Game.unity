@@ -1654,6 +1654,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BOSS
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 95c1025ce9f851245b7cd0df9168eccc, type: 2}
     - target: {fileID: 5866666021909216657, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       propertyPath: m_Controller
       value: 

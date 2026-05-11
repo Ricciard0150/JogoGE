@@ -24,6 +24,7 @@ public class BossGroundSlam : MonoBehaviour
 
     private bool jumping;
     private bool canJump = true;
+    private bool canSeePlayer1;
 
     void Update()
     {
@@ -132,6 +133,7 @@ public class BossGroundSlam : MonoBehaviour
         {
             if (hit.transform == player)
             {
+                canSeePlayer1 = true;
                 return true;
             }
         }
