@@ -3,19 +3,22 @@ using UnityEngine.AI;
 
 public class BossAnimation : MonoBehaviour
 {
-    [Header("Referências")]
+    [Header("Referï¿½ncias")]
     public Transform player;
     public NavMeshAgent agent;
     public Rigidbody rb;
     public Animator anim;
 
-    [Header("Visão")]
+    [Header("Visï¿½o")]
     public float viewDistance = 15f;
     public float viewAngle = 90f;
 
+    [Header("Ataque")]
+    public float attackDistance = 8f;
+
     [Header("Pulo")]
     public float jumpHeight = 5f;
-    public float jumpForwardForce = 3f;
+    public float jumpForwardForce = 6f;
     public float cooldown = 4f;
 
     [Header("Dano")]
@@ -25,20 +28,26 @@ public class BossAnimation : MonoBehaviour
     private bool jumping;
     private bool canJump = true;
 
+    public bool IsJumping => jumping;
+
     void Update()
     {
         if (player == null)
             return;
 
-        // segurança navmesh
-        if (!agent.enabled || !agent.isOnNavMesh)
-            return;
+        // animaï¿½ï¿½o de andar
+        if (agent.enabled)
+        {
+            anim.SetBool("Walking", agent.velocity.magnitude > 0.1f);
+        }
 
-        // animação de andar
-        anim.SetBool("Walking", agent.velocity.magnitude > 0.1f);
+        float dist = Vector3.Distance(transform.position, player.position);
 
         // ataque
-        if (CanSeePlayer() && !jumping && canJump)
+        if (CanSeePlayer() &&
+            dist <= attackDistance &&
+            !jumping &&
+            canJump)
         {
             JumpAttack();
         }
@@ -49,21 +58,26 @@ public class BossAnimation : MonoBehaviour
         jumping = true;
         canJump = false;
 
-        // toca animação
         anim.SetTrigger("Slam");
 
         // desliga navmesh
-        agent.enabled = false;
+        if (agent.enabled)
+        {
+            agent.enabled = false;
+        }
 
-        // direção do player
+        // ativa fï¿½sica
+        rb.isKinematic = false;
+
+        // direï¿½ï¿½o
         Vector3 dir = (player.position - transform.position).normalized;
-        dir.y = 0;
+        dir.y = 0f;
 
-        // força
+        // forï¿½a
         Vector3 force = dir * jumpForwardForce;
         force.y = jumpHeight;
 
-        // aplica no rigidbody
+        // aplica velocidade
         rb.linearVelocity = force;
     }
 
@@ -79,9 +93,12 @@ public class BossAnimation : MonoBehaviour
     {
         jumping = false;
 
+        // para fï¿½sica
         rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
 
-        // dano em área
+        
+        // dano em ï¿½rea
         Collider[] hits = Physics.OverlapSphere(transform.position, damageRadius);
 
         foreach (Collider hit in hits)
@@ -94,7 +111,7 @@ public class BossAnimation : MonoBehaviour
             }
         }
 
-        // volta navmesh
+        // reativa navmesh
         agent.enabled = true;
         agent.Warp(transform.position);
 
@@ -108,7 +125,10 @@ public class BossAnimation : MonoBehaviour
 
     bool CanSeePlayer()
     {
-        Vector3 dir = player.position - transform.position;
+        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 target = player.position + Vector3.up;
+
+        Vector3 dir = target - origin;
 
         float distance = dir.magnitude;
 
@@ -117,13 +137,15 @@ public class BossAnimation : MonoBehaviour
 
         float angle = Vector3.Angle(transform.forward, dir);
 
-        if (angle > viewAngle / 2)
+        if (angle > viewAngle / 2f)
             return false;
 
-        if (Physics.Linecast(transform.position + Vector3.up, player.position, out RaycastHit hit))
+        if (Physics.Linecast(origin, target, out RaycastHit hit))
         {
             if (hit.transform == player)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -136,5 +158,8 @@ public class BossAnimation : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, viewDistance);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 }

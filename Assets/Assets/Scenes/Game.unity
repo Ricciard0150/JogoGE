@@ -1694,7 +1694,7 @@ PrefabInstance:
       addedObject: {fileID: 1448733056}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1448733055}
+      addedObject: {fileID: 1448733062}
   m_SourcePrefab: {fileID: 100100000, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
 --- !u!1 &1448733052 stripped
 GameObject:
@@ -1720,10 +1720,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6738298
+  m_Radius: 0.4562391
   m_Height: 2.4791183
   m_Direction: 1
-  m_Center: {x: -0.1738298, y: 0.7395592, z: 0}
+  m_Center: {x: -0.1738298, y: 0.7395592, z: -0.21759069}
 --- !u!54 &1448733054
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1751,29 +1751,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 90
   m_CollisionDetection: 0
---- !u!114 &1448733055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448733052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc62c23afe28d4a4db26b22d0fd39770, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossGroundSlam
-  player: {fileID: 135756641613574985}
-  agent: {fileID: 1448733058}
-  rb: {fileID: 1448733054}
-  anim: {fileID: 1448733060}
-  viewDistance: 15
-  viewAngle: 90
-  jumpHeight: 6
-  jumpForwardForce: 3
-  cooldown: 4
-  damageRadius: 6
-  damage: 20
 --- !u!114 &1448733056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1846,16 +1823,31 @@ MonoBehaviour:
   anim: {fileID: 1448733060}
   viewDistance: 15
   viewAngle: 90
+  attackDistance: 4
   jumpHeight: 5
   jumpForwardForce: 3
   cooldown: 4
-  damageRadius: 5
+  damageRadius: 7.5
   damage: 20
 --- !u!95 &1448733060 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
   m_PrefabInstance: {fileID: 1448733051}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1448733062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448733052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12414fb279c109b40ab7ade990819b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStatus
+  _bloodEffect: {fileID: 3399146532196029385, guid: 4638e56ab8f7b3c4c9077e1329590b84, type: 3}
+  _lifeMax: 28.2
 --- !u!1 &1503284758
 GameObject:
   m_ObjectHideFlags: 0
