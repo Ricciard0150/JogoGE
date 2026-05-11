@@ -3,13 +3,13 @@ using UnityEngine.AI;
 
 public class BossGroundSlam : MonoBehaviour
 {
-    [Header("Referências")]
+    [Header("Referï¿½ncias")]
     public Transform player;
     public NavMeshAgent agent;
     public Rigidbody rb;
     public Animator anim;
 
-    [Header("Visão")]
+    [Header("Visï¿½o")]
     public float viewDistance = 15f;
     public float viewAngle = 90f;
 
@@ -24,6 +24,7 @@ public class BossGroundSlam : MonoBehaviour
 
     private bool jumping;
     private bool canJump = true;
+    private bool canSeePlayer1;
 
     void Update()
     {
@@ -34,9 +35,8 @@ public class BossGroundSlam : MonoBehaviour
         if (!agent.enabled || !agent.isOnNavMesh)
             return;
 
-        // animação de andar
-        anim.SetBool("Walking", agent.velocity.magnitude > 0.1f);
-
+        // animaï¿½ï¿½o de andar
+        anim.SetBool("Walking", CanSeePlayer());
         // pula somente vendo o player
         if (CanSeePlayer() && !jumping && canJump)
         {
@@ -49,19 +49,19 @@ public class BossGroundSlam : MonoBehaviour
         jumping = true;
         canJump = false;
 
-        // toca animação
+        // toca animaï¿½ï¿½o
         anim.SetTrigger("Slam");
 
         // desliga navmesh
         agent.enabled = false;
 
-        // direção do player
+        // direï¿½ï¿½o do player
         Vector3 dir = (player.position - transform.position).normalized;
 
-        // remove inclinação
+        // remove inclinaï¿½ï¿½o
         dir.y = 0;
 
-        // força
+        // forï¿½a
         Vector3 force = dir * jumpForwardForce;
         force.y = jumpHeight;
 
@@ -71,7 +71,7 @@ public class BossGroundSlam : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // bateu no chão
+        // bateu no chï¿½o
         if (jumping && collision.gameObject.CompareTag("Floor"))
         {
             Slam();
@@ -82,10 +82,9 @@ public class BossGroundSlam : MonoBehaviour
     {
         jumping = false;
 
-        // para movimento
         rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
 
-        // dano em área
         Collider[] hits = Physics.OverlapSphere(transform.position, damageRadius);
 
         foreach (Collider hit in hits)
@@ -98,11 +97,12 @@ public class BossGroundSlam : MonoBehaviour
             }
         }
 
-        // reativa navmesh
         agent.enabled = true;
 
-        // reposiciona no navmesh
-        agent.Warp(transform.position);
+        if (agent.isOnNavMesh)
+        {
+            agent.Warp(transform.position);
+        }
 
         Invoke(nameof(ResetJump), cooldown);
     }
@@ -122,7 +122,7 @@ public class BossGroundSlam : MonoBehaviour
         if (distance > viewDistance)
             return false;
 
-        // ângulo de visão
+        // ï¿½ngulo de visï¿½o
         float angle = Vector3.Angle(transform.forward, dir);
 
         if (angle > viewAngle / 2)
@@ -133,6 +133,7 @@ public class BossGroundSlam : MonoBehaviour
         {
             if (hit.transform == player)
             {
+                canSeePlayer1 = true;
                 return true;
             }
         }
@@ -146,7 +147,7 @@ public class BossGroundSlam : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, damageRadius);
 
-        // visão
+        // visï¿½o
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, viewDistance);
     }

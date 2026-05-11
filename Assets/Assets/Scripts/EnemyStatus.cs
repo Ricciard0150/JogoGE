@@ -2,34 +2,34 @@ using UnityEngine;
 
 public class EnemyStatus : MonoBehaviour, IShootable
 {
-    [SerializeField] private GameObject _bloodEffect;
-    [SerializeField] float _lifeMax = 2;
-    private float _currentLife;
+    [SerializeField] private GameObject bloodEffect;
+    [SerializeField] private float lifeMax = 2f;
 
-    private bool isColliding;
-    public void Hitted(float damage, Vector3 shootPoint)
-    {
-        _currentLife -= damage;
+    private float currentLife;
 
-        GameObject blood = Instantiate(_bloodEffect, shootPoint, Quaternion.LookRotation(shootPoint - transform.position));
-        blood.transform.SetParent(transform);
-        if (_currentLife > 0)
-            return;
-
-        Destroy(gameObject);
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _currentLife = _lifeMax;
-       
+        currentLife = lifeMax;
     }
-    public void OnCollisionEnter(Collision collision)
+
+    public void Hitted(float damage, Vector3 shootPoint)
     {
-       if(collision.gameObject.TryGetComponent(out IDamageable dameageble))
+        currentLife -= damage;
+
+        if (bloodEffect != null)
         {
-            dameageble.Damage(20);
-            print("collided");
+            GameObject blood = Instantiate(
+                bloodEffect,
+                shootPoint,
+                Quaternion.LookRotation(shootPoint - transform.position)
+            );
+
+            blood.transform.SetParent(transform);
+        }
+
+        if (currentLife <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 }
