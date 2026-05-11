@@ -1657,7 +1657,7 @@ PrefabInstance:
     - target: {fileID: 1630794972795428178, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 95c1025ce9f851245b7cd0df9168eccc, type: 2}
+      objectReference: {fileID: 2100000, guid: a96224a1e45021a4293f445fbc06876a, type: 2}
     - target: {fileID: 5866666021909216657, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       propertyPath: m_Controller
       value: 
@@ -1827,12 +1827,15 @@ MonoBehaviour:
   anim: {fileID: 1448733060}
   viewDistance: 15
   viewAngle: 90
-  attackDistance: 4
+  meleeDistance: 3
+  meleeDamage: 10
+  meleeCooldown: 1.5
+  slamDistance: 8
   jumpHeight: 5
-  jumpForwardForce: 3
-  cooldown: 4
-  damageRadius: 7.5
-  damage: 20
+  jumpForce: 6
+  slamCooldown: 4
+  slamRadius: 5
+  slamDamage: 20
 --- !u!95 &1448733060 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
@@ -1850,8 +1853,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12414fb279c109b40ab7ade990819b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatus
-  _bloodEffect: {fileID: 3399146532196029385, guid: 4638e56ab8f7b3c4c9077e1329590b84, type: 3}
-  _lifeMax: 28.2
+  bloodEffect: {fileID: 0}
+  lifeMax: 2
 --- !u!1 &1503284758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2175,8 +2178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12414fb279c109b40ab7ade990819b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatus
-  _bloodEffect: {fileID: 3399146532196029385, guid: 4638e56ab8f7b3c4c9077e1329590b84, type: 3}
-  _lifeMax: 10
+  bloodEffect: {fileID: 0}
+  lifeMax: 2
 --- !u!195 &1834557074
 NavMeshAgent:
   m_ObjectHideFlags: 0
