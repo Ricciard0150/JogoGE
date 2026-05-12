@@ -14,7 +14,6 @@ public class SniperGun : MonoBehaviour
 
     [Header("Camera")]
     public Camera fpsCam;
-
     public CinemachineVirtualCamera virtualCam;
 
     [Header("Zoom")]
@@ -26,29 +25,31 @@ public class SniperGun : MonoBehaviour
 
     [Header("Sniper")]
     public Transform sniper;
-
     public Vector3 normalPosition;
     public Vector3 aimPosition;
-
     public float aimSpeed = 10f;
+
+    [Header("Effects")]
+    public GameObject bloodEffect;
+    public ParticleSystem muzzleFlash;
 
     private float nextShot;
 
     void Start()
     {
-        // ESCONDE SCOPE
+        // Esconde scope
         if (scopeUI != null)
         {
             scopeUI.SetActive(false);
         }
 
-        // FOV NORMAL
+        // FOV normal
         if (virtualCam != null)
         {
             virtualCam.m_Lens.FieldOfView = normalFov;
         }
 
-        // POSIÇÃO NORMAL
+        // Posição inicial da sniper
         if (sniper != null)
         {
             sniper.localPosition = normalPosition;
@@ -68,7 +69,7 @@ public class SniperGun : MonoBehaviour
             ZoomOut();
         }
 
-        // TIRO
+        // ATIRAR
         if (Input.GetMouseButtonDown(0))
         {
             Shoot();
@@ -92,10 +93,17 @@ public class SniperGun : MonoBehaviour
 
     void Shoot()
     {
+        // Cooldown
         if (Time.time < nextShot)
             return;
 
         nextShot = Time.time + shootCooldown;
+
+        // Muzzle Flash
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
 
         RaycastHit hit;
 
@@ -107,12 +115,19 @@ public class SniperGun : MonoBehaviour
         {
             Debug.Log("Acertou: " + hit.collider.name);
 
+            // Procura EnemyHealth
             EnemyHealth enemy =
                 hit.collider.GetComponentInParent<EnemyHealth>();
 
+            // Se acertou inimigo
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                // Dá dano + sangue
+                enemy.TakeDamage(
+                    damage,
+                    hit.point,
+                    hit.normal
+                );
 
                 Debug.Log("DEU DANO");
             }
@@ -121,13 +136,13 @@ public class SniperGun : MonoBehaviour
 
     void ZoomIn()
     {
-        // ZOOM
+        // Zoom
         if (virtualCam != null)
         {
             virtualCam.m_Lens.FieldOfView = zoomFov;
         }
 
-        // MOSTRA MIRA
+        // Scope
         if (scopeUI != null)
         {
             scopeUI.SetActive(true);
@@ -136,13 +151,13 @@ public class SniperGun : MonoBehaviour
 
     void ZoomOut()
     {
-        // VOLTA FOV
+        // Volta FOV
         if (virtualCam != null)
         {
             virtualCam.m_Lens.FieldOfView = normalFov;
         }
 
-        // ESCONDE MIRA
+        // Esconde scope
         if (scopeUI != null)
         {
             scopeUI.SetActive(false);
