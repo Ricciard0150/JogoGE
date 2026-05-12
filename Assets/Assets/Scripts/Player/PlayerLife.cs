@@ -13,7 +13,7 @@ public class PlayerLife : MonoBehaviour, IDamageable
     public GameObject defeatScreen;
 
     [Header("Boss")]
-    public EnemyStatus boss;
+    public BossAnimation boss;
 
     [Header("Tecla Respawn")]
     public KeyCode respawnKey = KeyCode.R;
@@ -28,19 +28,16 @@ public class PlayerLife : MonoBehaviour, IDamageable
         life = Mathf.Clamp(life, 0, lifeMax);
 
         if (life <= 0)
-        {
             Die();
-        }
     }
 
     void Update()
     {
-        if (isDead)
+        if (!isDead) return;
+
+        if (Input.GetKeyDown(respawnKey))
         {
-            if (Input.GetKeyDown(respawnKey))
-            {
-                Respawn();
-            }
+            Respawn();
         }
     }
 
@@ -52,14 +49,10 @@ public class PlayerLife : MonoBehaviour, IDamageable
 
         if (defeatScreen != null)
             defeatScreen.SetActive(true);
-
-        Time.timeScale = 0f;
     }
 
     void Respawn()
     {
-        Time.timeScale = 1f;
-
         life = lifeMax;
         isDead = false;
 

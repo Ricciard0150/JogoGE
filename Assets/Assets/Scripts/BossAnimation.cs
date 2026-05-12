@@ -37,6 +37,15 @@ public class BossAnimation : MonoBehaviour
     private bool canJump = true;
     private bool canMelee = true;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
+    void Start()
+    {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+    }
+
     void Update()
     {
         if (player == null)
@@ -44,10 +53,22 @@ public class BossAnimation : MonoBehaviour
 
         bool seeingPlayer = CanSeePlayer();
 
+        // 💥 MOVIMENTO CONTROLADO POR VISÃO
         if (!jumping)
-            agent.SetDestination(player.position);
+        {
+            if (seeingPlayer)
+            {
+                agent.SetDestination(player.position);
+            }
+            else
+            {
+                agent.ResetPath();
+            }
+        }
 
-        anim.SetBool("Walking", agent.velocity.magnitude > 0.2f);
+        // 💥 WALKING IMEDIATO AO VER PLAYER
+        bool isMoving = agent.velocity.magnitude > 0.2f;
+        anim.SetBool("Walking", seeingPlayer && !jumping && (seeingPlayer || isMoving));
 
         float dist = Vector3.Distance(transform.position, player.position);
 
@@ -98,7 +119,6 @@ public class BossAnimation : MonoBehaviour
         anim.SetTrigger("Slam");
 
         agent.enabled = false;
-
         rb.isKinematic = false;
 
         Vector3 dir = (player.position - transform.position).normalized;
@@ -134,7 +154,6 @@ public class BossAnimation : MonoBehaviour
                 dmg.Damage(slamDamage);
         }
 
-        // 💨 POEIRA EM CÍRCULO
         SpawnDustCircle();
 
         agent.enabled = true;
@@ -157,7 +176,6 @@ public class BossAnimation : MonoBehaviour
 
             Vector3 spawnPos = transform.position + offset;
 
-            // ajusta no chão
             if (Physics.Raycast(spawnPos + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f))
             {
                 spawnPos = hit.point;
@@ -189,5 +207,26 @@ public class BossAnimation : MonoBehaviour
             return hit.transform == player;
 
         return false;
+    }
+
+    // 🔥 RESET DO BOSS
+    public void ResetBoss()
+    {
+        jumping = false;
+        canJump = true;
+        canMelee = true;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        agent.enabled = false;
+
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+
+        agent.enabled = true;
+        agent.Warp(startPosition);
+
+        anim.SetBool("Walking", false);
     }
 }
