@@ -28,6 +28,11 @@ public class BossAnimation : MonoBehaviour
     public float slamRadius = 5f;
     public int slamDamage = 20;
 
+    [Header("Poeira")]
+    public GameObject slamDustPrefab;
+    public int dustPoints = 12;
+    public float dustRadius = 3f;
+
     public bool jumping;
     private bool canJump = true;
     private bool canMelee = true;
@@ -40,9 +45,7 @@ public class BossAnimation : MonoBehaviour
         bool seeingPlayer = CanSeePlayer();
 
         if (!jumping)
-        {
             agent.SetDestination(player.position);
-        }
 
         anim.SetBool("Walking", agent.velocity.magnitude > 0.2f);
 
@@ -67,7 +70,6 @@ public class BossAnimation : MonoBehaviour
         canMelee = false;
 
         agent.isStopped = true;
-
         anim.SetTrigger("Attack");
 
         Invoke(nameof(ResetMelee), meleeCooldown);
@@ -78,9 +80,7 @@ public class BossAnimation : MonoBehaviour
         if (Vector3.Distance(transform.position, player.position) <= meleeDistance + 1f)
         {
             if (player.TryGetComponent(out IDamageable dmg))
-            {
                 dmg.Damage(meleeDamage);
-            }
         }
     }
 
@@ -125,20 +125,46 @@ public class BossAnimation : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
+        // 💥 DANO EM ÁREA
         Collider[] hits = Physics.OverlapSphere(transform.position, slamRadius);
 
         foreach (Collider hit in hits)
         {
             if (hit.TryGetComponent(out IDamageable dmg))
-            {
                 dmg.Damage(slamDamage);
-            }
         }
+
+        // 💨 POEIRA EM CÍRCULO
+        SpawnDustCircle();
 
         agent.enabled = true;
         agent.Warp(transform.position);
 
         Invoke(nameof(ResetJump), slamCooldown);
+    }
+
+    void SpawnDustCircle()
+    {
+        for (int i = 0; i < dustPoints; i++)
+        {
+            float angle = i * Mathf.PI * 2f / dustPoints;
+
+            Vector3 offset = new Vector3(
+                Mathf.Cos(angle),
+                0,
+                Mathf.Sin(angle)
+            ) * dustRadius;
+
+            Vector3 spawnPos = transform.position + offset;
+
+            // ajusta no chão
+            if (Physics.Raycast(spawnPos + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f))
+            {
+                spawnPos = hit.point;
+            }
+
+            Instantiate(slamDustPrefab, spawnPos, Quaternion.identity);
+        }
     }
 
     void ResetJump()
@@ -160,9 +186,7 @@ public class BossAnimation : MonoBehaviour
             return false;
 
         if (Physics.Linecast(origin, target, out RaycastHit hit))
-        {
             return hit.transform == player;
-        }
 
         return false;
     }

@@ -14,7 +14,7 @@ public class AcidPool : MonoBehaviour
     {
         if (!collision.TryGetComponent(out IDamageable damageable))
             return;
-        damageable.Damage(10);
 
+        damageable.Damage(10);
     }
 }

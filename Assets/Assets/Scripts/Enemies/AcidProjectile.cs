@@ -4,26 +4,33 @@ public class AcidProjectile : MonoBehaviour
 {
     public GameObject acidPoolPrefab;
 
-    public Transform alvo;
-    public float velocidade = 5f;
-
     public float damage = 20f;
 
+    private bool collided = false;
 
     private void OnCollisionEnter(Collision collision)
     {
-        Instantiate(
-            acidPoolPrefab,
-            transform.position,
-            Quaternion.Euler(0, 180, 0)
-        );
+        if (collided) return;
 
+        collided = true;
 
+        // Se bater no chão
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Instantiate(
+                acidPoolPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+        }
+
+        // Se acertar algo que toma dano
         if (collision.gameObject.TryGetComponent(out IDamageable damageable))
         {
-            damageable.Damage(40);
-            print("collided");
+            damageable.Damage(10);
         }
 
-        }
+        // Destrói o projétil
+        Destroy(gameObject);
+    }
 }

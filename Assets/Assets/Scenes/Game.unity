@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &23764550 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5653519914247303419, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
-  m_PrefabInstance: {fileID: 1448733051}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &107989210
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,6 +1377,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116428622}
   m_CullTransparentMesh: 1
+--- !u!1 &1207864362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207864363}
+  m_Layer: 0
+  m_Name: eyes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1207864363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207864362}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.698, z: 0.691}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1448733063}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1236040159 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1887453031966518564, guid: 8afb646656e7b4c408fcbe329c119008, type: 3}
@@ -1679,6 +1705,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.28
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.19
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.81
       objectReference: {fileID: 0}
@@ -1752,7 +1786,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1207864363}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
       insertIndex: -1
@@ -1844,9 +1881,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossAcidAttack
   acidProjectilePrefab: {fileID: 4964342285778640772, guid: b4ab2654dd7226740a7d4a546a5c7ff3, type: 3}
-  shootPoint: {fileID: 23764550}
+  shootPoint: {fileID: 1207864363}
   playerPoint: {fileID: 135756641613574985}
   shootForce: 25
+  minAttackTime: 2
+  maxAttackTime: 5
+  viewDistance: 10
+  viewAngle: 90
 --- !u!114 &1448733057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1863,6 +1904,10 @@ MonoBehaviour:
   player: {fileID: 135756641613574985}
   viewDistance: 10
   viewAngle: 90
+  acidProjectilePrefab: {fileID: 4964342285778640772, guid: b4ab2654dd7226740a7d4a546a5c7ff3, type: 3}
+  shootPoint: {fileID: 1207864363}
+  shootForce: 10
+  attackCooldown: 5
 --- !u!195 &1448733058
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1912,6 +1957,9 @@ MonoBehaviour:
   slamCooldown: 4
   slamRadius: 5
   slamDamage: 20
+  slamDustPrefab: {fileID: 4315864664756504568, guid: 06c163d1556371842a0d3d3cc23f78d6, type: 3}
+  dustPoints: 12
+  dustRadius: 3
   jumping: 0
 --- !u!95 &1448733060 stripped
 Animator:
@@ -1931,7 +1979,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatus
   lifeMax: 2
-  bloodEffect: {fileID: 0}
+  bloodEffect: {fileID: 3399146532196029385, guid: 4638e56ab8f7b3c4c9077e1329590b84, type: 3}
+--- !u!4 &1448733063 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b423162fb9237ef4bbc8de5c76d130e5, type: 3}
+  m_PrefabInstance: {fileID: 1448733051}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1503284758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2299,6 +2352,10 @@ MonoBehaviour:
   player: {fileID: 135756641613574985}
   viewDistance: 10
   viewAngle: 90
+  acidProjectilePrefab: {fileID: 0}
+  shootPoint: {fileID: 0}
+  shootForce: 25
+  attackCooldown: 5
 --- !u!1 &1860550450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2870,6 +2927,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1888427756403250876, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 8345070699079395522, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3109,6 +3170,10 @@ MonoBehaviour:
   shootPoint: {fileID: 1503284759}
   playerPoint: {fileID: 135756641613574985}
   shootForce: 25
+  minAttackTime: 2
+  maxAttackTime: 5
+  viewDistance: 10
+  viewAngle: 90
 --- !u!114 &2134384957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3127,6 +3192,10 @@ MonoBehaviour:
   player: {fileID: 135756641613574985}
   viewDistance: 10
   viewAngle: 90
+  acidProjectilePrefab: {fileID: 0}
+  shootPoint: {fileID: 0}
+  shootForce: 25
+  attackCooldown: 5
 --- !u!54 &2134384958
 Rigidbody:
   m_ObjectHideFlags: 0

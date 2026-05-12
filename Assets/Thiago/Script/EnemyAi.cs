@@ -9,7 +9,7 @@ public class EnemyAI : MonoBehaviour
     private PlayerHealth playerHealth;
 
     [Header("Movimento")]
-    public float speed = 4f;
+    public float speed = 8f;
     public float chaseDistance = 20f;
     public float attackDistance = 3f;
 
