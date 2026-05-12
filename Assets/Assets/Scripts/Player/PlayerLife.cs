@@ -1,15 +1,24 @@
 using UnityEngine;
-using System.Collections;
 
 public class PlayerLife : MonoBehaviour, IDamageable
 {
+    [Header("Vida")]
     public float life = 100f;
     public float lifeMax = 100f;
 
+    [Header("Respawn")]
     public Transform respawnPoint;
+
+    [Header("UI")]
     public GameObject defeatScreen;
 
-    bool isDead = false;
+    [Header("Boss")]
+    public EnemyStatus boss;
+
+    [Header("Tecla Respawn")]
+    public KeyCode respawnKey = KeyCode.R;
+
+    private bool isDead = false;
 
     public void Damage(int quantity)
     {
@@ -18,27 +27,24 @@ public class PlayerLife : MonoBehaviour, IDamageable
         life -= quantity;
         life = Mathf.Clamp(life, 0, lifeMax);
 
-        //StartCoroutine(DamageFeedback());
-
         if (life <= 0)
         {
-            Derrota();
+            Die();
         }
     }
 
+    void Update()
+    {
+        if (isDead)
+        {
+            if (Input.GetKeyDown(respawnKey))
+            {
+                Respawn();
+            }
+        }
+    }
 
-
-    //IEnumerator DamageFeedback()
-    //{
-    //    if (sprite != null)
-    //    {
-    //        sprite.color = Color.red;
-    //        yield return new WaitForSeconds(1f);
-    //        sprite.color = Color.white;
-    //    }
-    //}
-
-    void Derrota()
+    void Die()
     {
         isDead = true;
 
@@ -47,11 +53,13 @@ public class PlayerLife : MonoBehaviour, IDamageable
         if (defeatScreen != null)
             defeatScreen.SetActive(true);
 
-        Invoke(nameof(Respawn), 2f);
+        Time.timeScale = 0f;
     }
 
     void Respawn()
     {
+        Time.timeScale = 1f;
+
         life = lifeMax;
         isDead = false;
 
@@ -60,5 +68,8 @@ public class PlayerLife : MonoBehaviour, IDamageable
 
         if (defeatScreen != null)
             defeatScreen.SetActive(false);
+
+        if (boss != null)
+            boss.ResetBoss();
     }
 }

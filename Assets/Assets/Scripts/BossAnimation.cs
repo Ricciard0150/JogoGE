@@ -11,14 +11,14 @@ public class BossAnimation : MonoBehaviour
 
     [Header("Visão")]
     public float viewDistance = 15f;
-    public float viewAngle = 90f;
+    public float viewAngle = 120f;
 
-    [Header("Melee Attack")]
+    [Header("Melee")]
     public float meleeDistance = 3f;
     public int meleeDamage = 10;
     public float meleeCooldown = 1.5f;
 
-    [Header("Ground Slam")]
+    [Header("Slam")]
     public float slamDistance = 8f;
     public float jumpHeight = 5f;
     public float jumpForce = 6f;
@@ -28,11 +28,9 @@ public class BossAnimation : MonoBehaviour
     public float slamRadius = 5f;
     public int slamDamage = 20;
 
-    private bool jumping;
+    public bool jumping;
     private bool canJump = true;
     private bool canMelee = true;
-
-    public bool IsJumping => jumping;
 
     void Update()
     {
@@ -41,10 +39,12 @@ public class BossAnimation : MonoBehaviour
 
         bool seeingPlayer = CanSeePlayer();
 
-        anim.SetBool("Walking", seeingPlayer && !jumping);
+        if (!jumping)
+        {
+            agent.SetDestination(player.position);
+        }
 
-        if (!agent.enabled || !agent.isOnNavMesh)
-            return;
+        anim.SetBool("Walking", agent.velocity.magnitude > 0.2f);
 
         float dist = Vector3.Distance(transform.position, player.position);
 
@@ -62,18 +62,17 @@ public class BossAnimation : MonoBehaviour
         }
     }
 
-    // ================= MELEE =================
-
     void MeleeAttack()
     {
         canMelee = false;
+
+        agent.isStopped = true;
 
         anim.SetTrigger("Attack");
 
         Invoke(nameof(ResetMelee), meleeCooldown);
     }
 
-    // CHAMADO PELO ANIMATION EVENT
     public void DealMeleeDamage()
     {
         if (Vector3.Distance(transform.position, player.position) <= meleeDistance + 1f)
@@ -88,9 +87,8 @@ public class BossAnimation : MonoBehaviour
     void ResetMelee()
     {
         canMelee = true;
+        agent.isStopped = false;
     }
-
-    // ================= SLAM =================
 
     void JumpAttack()
     {

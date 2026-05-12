@@ -36,7 +36,7 @@ public class EnemieFollowing : MonoBehaviour
             return;
 
         // não movimenta durante o pulo
-        if (bossAnim != null && bossAnim.IsJumping)
+        if (bossAnim != null && bossAnim.jumping)
             return;
 
         // verifica visão
