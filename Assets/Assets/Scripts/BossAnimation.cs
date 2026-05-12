@@ -51,6 +51,9 @@ public class BossAnimation : MonoBehaviour
         if (player == null)
             return;
 
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+            return;
+
         bool seeingPlayer = CanSeePlayer();
 
         // 💥 MOVIMENTO CONTROLADO POR VISÃO
@@ -62,13 +65,15 @@ public class BossAnimation : MonoBehaviour
             }
             else
             {
-                agent.ResetPath();
+                // 🔥 evita erro do ResetPath
+                if (agent.hasPath)
+                    agent.ResetPath();
             }
         }
 
-        // 💥 WALKING IMEDIATO AO VER PLAYER
+        // 💥 WALKING
         bool isMoving = agent.velocity.magnitude > 0.2f;
-        anim.SetBool("Walking", seeingPlayer && !jumping && (seeingPlayer || isMoving));
+        anim.SetBool("Walking", seeingPlayer && !jumping && isMoving);
 
         float dist = Vector3.Distance(transform.position, player.position);
 
