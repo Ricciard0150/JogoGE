@@ -33,6 +33,11 @@ public class SniperGun : MonoBehaviour
     public GameObject bloodEffect;
     public ParticleSystem muzzleFlash;
 
+    [Header("Sounds")]
+    public AudioSource audioSource;
+    public AudioClip shootSound;
+    public AudioClip scopeSound;
+
     private float nextShot;
 
     void Start()
@@ -99,6 +104,12 @@ public class SniperGun : MonoBehaviour
 
         nextShot = Time.time + shootCooldown;
 
+        // Som do tiro
+        if (audioSource != null && shootSound != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
+
         // Muzzle Flash
         if (muzzleFlash != null)
         {
@@ -136,6 +147,12 @@ public class SniperGun : MonoBehaviour
 
     void ZoomIn()
     {
+        // Som da scope
+        if (audioSource != null && scopeSound != null)
+        {
+            audioSource.PlayOneShot(scopeSound);
+        }
+
         // Zoom
         if (virtualCam != null)
         {
