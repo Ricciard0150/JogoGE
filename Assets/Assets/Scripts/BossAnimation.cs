@@ -8,6 +8,14 @@ public class BossAnimation : MonoBehaviour
     public NavMeshAgent agent;
     public Rigidbody rb;
     public Animator anim;
+    public VictoryScreen victoryScreen;
+
+    [Header("Boss Music")]
+    public AudioSource bossMusic;
+    private bool musicPlaying;
+
+    [Header("Vida")]
+    public bool dead = false;
 
     [Header("Visão")]
     public float viewDistance = 15f;
@@ -34,6 +42,7 @@ public class BossAnimation : MonoBehaviour
     public float dustRadius = 3f;
 
     public bool jumping;
+
     private bool canJump = true;
     private bool canMelee = true;
 
@@ -48,6 +57,9 @@ public class BossAnimation : MonoBehaviour
 
     void Update()
     {
+        if (dead)
+            return;
+
         if (player == null)
             return;
 
@@ -56,7 +68,29 @@ public class BossAnimation : MonoBehaviour
 
         bool seeingPlayer = CanSeePlayer();
 
-        // 💥 MOVIMENTO CONTROLADO POR VISÃO
+        // TOCA MUSICA
+        if (seeingPlayer && !musicPlaying)
+        {
+            if (bossMusic != null)
+            {
+                bossMusic.Play();
+            }
+
+            musicPlaying = true;
+        }
+
+        // PARA MUSICA
+        if (!seeingPlayer && musicPlaying)
+        {
+            if (bossMusic != null)
+            {
+                bossMusic.Stop();
+            }
+
+            musicPlaying = false;
+        }
+
+        // MOVIMENTO
         if (!jumping)
         {
             if (seeingPlayer)
@@ -65,27 +99,45 @@ public class BossAnimation : MonoBehaviour
             }
             else
             {
-                // 🔥 evita erro do ResetPath
                 if (agent.hasPath)
                     agent.ResetPath();
             }
         }
 
-        // 💥 WALKING
+        // WALK
         bool isMoving = agent.velocity.magnitude > 0.2f;
-        anim.SetBool("Walking", seeingPlayer && !jumping && isMoving);
 
-        float dist = Vector3.Distance(transform.position, player.position);
+        anim.SetBool(
+            "Walking",
+            seeingPlayer &&
+            !jumping &&
+            isMoving
+        );
+
+        float dist = Vector3.Distance(
+            transform.position,
+            player.position
+        );
 
         // MELEE
-        if (seeingPlayer && dist <= meleeDistance && canMelee && !jumping)
+        if (
+            seeingPlayer &&
+            dist <= meleeDistance &&
+            canMelee &&
+            !jumping
+        )
         {
             MeleeAttack();
             return;
         }
 
         // SLAM
-        if (seeingPlayer && dist <= slamDistance && canJump && !jumping)
+        if (
+            seeingPlayer &&
+            dist <= slamDistance &&
+            canJump &&
+            !jumping
+        )
         {
             JumpAttack();
         }
@@ -96,6 +148,7 @@ public class BossAnimation : MonoBehaviour
         canMelee = false;
 
         agent.isStopped = true;
+
         anim.SetTrigger("Attack");
 
         Invoke(nameof(ResetMelee), meleeCooldown);
@@ -103,17 +156,34 @@ public class BossAnimation : MonoBehaviour
 
     public void DealMeleeDamage()
     {
-        if (Vector3.Distance(transform.position, player.position) <= meleeDistance + 1f)
+        if (dead)
+            return;
+
+        if (
+            Vector3.Distance(
+                transform.position,
+                player.position
+            ) <= meleeDistance + 1f
+        )
         {
             if (player.TryGetComponent(out IDamageable dmg))
+            {
                 dmg.Damage(meleeDamage);
+            }
         }
     }
 
     void ResetMelee()
     {
+        if (dead)
+            return;
+
         canMelee = true;
-        agent.isStopped = false;
+
+        if (agent.enabled)
+        {
+            agent.isStopped = false;
+        }
     }
 
     void JumpAttack()
@@ -124,9 +194,12 @@ public class BossAnimation : MonoBehaviour
         anim.SetTrigger("Slam");
 
         agent.enabled = false;
+
         rb.isKinematic = false;
 
-        Vector3 dir = (player.position - transform.position).normalized;
+        Vector3 dir =
+            (player.position - transform.position).normalized;
+
         dir.y = 0;
 
         Vector3 force = dir * jumpForce;
@@ -137,7 +210,13 @@ public class BossAnimation : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (jumping && collision.gameObject.CompareTag("Floor"))
+        if (dead)
+            return;
+
+        if (
+            jumping &&
+            collision.gameObject.CompareTag("Floor")
+        )
         {
             Slam();
         }
@@ -150,13 +229,19 @@ public class BossAnimation : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        // 💥 DANO EM ÁREA
-        Collider[] hits = Physics.OverlapSphere(transform.position, slamRadius);
+        // DANO AREA
+        Collider[] hits =
+            Physics.OverlapSphere(
+                transform.position,
+                slamRadius
+            );
 
         foreach (Collider hit in hits)
         {
             if (hit.TryGetComponent(out IDamageable dmg))
+            {
                 dmg.Damage(slamDamage);
+            }
         }
 
         SpawnDustCircle();
@@ -169,9 +254,13 @@ public class BossAnimation : MonoBehaviour
 
     void SpawnDustCircle()
     {
+        if (slamDustPrefab == null)
+            return;
+
         for (int i = 0; i < dustPoints; i++)
         {
-            float angle = i * Mathf.PI * 2f / dustPoints;
+            float angle =
+                i * Mathf.PI * 2f / dustPoints;
 
             Vector3 offset = new Vector3(
                 Mathf.Cos(angle),
@@ -179,47 +268,131 @@ public class BossAnimation : MonoBehaviour
                 Mathf.Sin(angle)
             ) * dustRadius;
 
-            Vector3 spawnPos = transform.position + offset;
+            Vector3 spawnPos =
+                transform.position + offset;
 
-            if (Physics.Raycast(spawnPos + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f))
+            if (
+                Physics.Raycast(
+                    spawnPos + Vector3.up * 2f,
+                    Vector3.down,
+                    out RaycastHit hit,
+                    5f
+                )
+            )
             {
                 spawnPos = hit.point;
             }
 
-            Instantiate(slamDustPrefab, spawnPos, Quaternion.identity);
+            Instantiate(
+                slamDustPrefab,
+                spawnPos,
+                Quaternion.identity
+            );
         }
     }
 
     void ResetJump()
     {
+        if (dead)
+            return;
+
         canJump = true;
     }
 
     bool CanSeePlayer()
     {
-        Vector3 origin = transform.position + Vector3.up * 1.5f;
-        Vector3 target = player.position + Vector3.up;
+        Vector3 origin =
+            transform.position + Vector3.up * 1.5f;
+
+        Vector3 target =
+            player.position + Vector3.up;
 
         Vector3 dir = target - origin;
 
         if (dir.magnitude > viewDistance)
             return false;
 
-        if (Vector3.Angle(transform.forward, dir) > viewAngle / 2f)
+        if (
+            Vector3.Angle(transform.forward, dir)
+            > viewAngle / 2f
+        )
             return false;
 
-        if (Physics.Linecast(origin, target, out RaycastHit hit))
+        if (
+            Physics.Linecast(
+                origin,
+                target,
+                out RaycastHit hit
+            )
+        )
+        {
             return hit.transform == player;
+        }
 
         return false;
     }
 
-    // 🔥 RESET DO BOSS
+    // MORTE DO BOSS
+    public void BossDeath()
+    {
+        if (dead)
+            return;
+
+        dead = true;
+
+        CancelInvoke();
+
+        jumping = false;
+
+        canJump = false;
+        canMelee = false;
+
+        if (agent.enabled)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+            agent.enabled = false;
+        }
+
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        anim.SetBool("Walking", false);
+
+        anim.SetTrigger("Death");
+
+        // PARA MUSICA
+        if (bossMusic != null)
+        {
+            bossMusic.Stop();
+        }
+
+        musicPlaying = false;
+
+        ShowVictoryAfterDeath();
+    }
+
+    public void ShowVictoryAfterDeath()
+    {
+        if (victoryScreen != null)
+        {
+            victoryScreen.ShowVictory();
+        }
+    }
+
+    // RESET
     public void ResetBoss()
     {
+        dead = false;
+
         jumping = false;
+
         canJump = true;
         canMelee = true;
+
+        musicPlaying = false;
+
+        CancelInvoke();
 
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
@@ -232,6 +405,13 @@ public class BossAnimation : MonoBehaviour
         agent.enabled = true;
         agent.Warp(startPosition);
 
+        agent.isStopped = false;
+
         anim.SetBool("Walking", false);
+
+        if (bossMusic != null)
+        {
+            bossMusic.Stop();
+        }
     }
 }
