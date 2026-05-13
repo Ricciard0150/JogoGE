@@ -712,43 +712,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.09425998
+      value: -0.098
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.225
+      value: 0.113
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.38936996
+      value: 0.429
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.028615104
+      value: 0.03369004
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.025143247
+      value: -0.017776063
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6595859
+      value: 0.8164706
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7506634
+      value: 0.57612914
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -82.61
+      value: -70.387
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 174.095
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 175.634
+      value: 1.672
       objectReference: {fileID: 0}
     - target: {fileID: 4334314812708720168, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
       propertyPath: m_Name
@@ -4307,7 +4307,7 @@ MonoBehaviour:
     _gunModel: {fileID: 981398432}
     _name: Katana
     _damage: 10
-    _shootRate: 5
+    _shootRate: 10
     _ammunation: 0
     _clipSize: 0
     _reloadTime: 0
