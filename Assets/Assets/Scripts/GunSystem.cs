@@ -31,6 +31,9 @@ public class GunSystem : MonoBehaviour
     [Header("FX")]
     private ParticleSystem _muzzleFlash;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource _shootAudioSource;
+
     void Start()
     {
         _camera = Camera.main.transform;
@@ -49,6 +52,7 @@ public class GunSystem : MonoBehaviour
     {
         // troca arma
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+
         if (scroll != 0)
             ChangeWeapon(scroll);
 
@@ -80,6 +84,12 @@ public class GunSystem : MonoBehaviour
 
         _shootTimer = 0f;
 
+        // 🔊 SOM DO TIRO
+        if (_shootAudioSource != null && _handGun.ShootSound != null)
+        {
+            _shootAudioSource.PlayOneShot(_handGun.ShootSound);
+        }
+
         // 🔥 MUZZLE FLASH
         if (_muzzleFlash != null)
         {
@@ -87,7 +97,7 @@ public class GunSystem : MonoBehaviour
             _muzzleFlash.Play();
         }
 
-        // RAYCAST (tiro instantâneo)
+        // RAYCAST
         if (Physics.Raycast(_camera.position, _camera.forward, out RaycastHit hit))
         {
             if (hit.collider.TryGetComponent(out IShootable shootable))
@@ -103,6 +113,7 @@ public class GunSystem : MonoBehaviour
             return;
 
         int currentIndex = _gunInventory.Guns.IndexOf(_handGun);
+
         currentIndex += (int)Mathf.Sign(nextIndex);
 
         if (currentIndex >= _gunInventory.Guns.Count)
@@ -126,7 +137,7 @@ public class GunSystem : MonoBehaviour
 
         gun.transform.localPosition = Vector3.zero;
 
-        // 🔥 pega muzzle flash da arma
+        // 🔥 muzzle flash
         _muzzleFlash = gun.GetComponentInChildren<ParticleSystem>();
     }
 
