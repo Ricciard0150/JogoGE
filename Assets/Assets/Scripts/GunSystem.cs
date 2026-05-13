@@ -109,18 +109,20 @@ public class GunSystem : MonoBehaviour
                 );
             }
 
+            RaycastHit meleeHit;
+
             if (Physics.Raycast(
                 _camera.position,
                 _camera.forward,
-                out RaycastHit hit,
+                out meleeHit,
                 _handGun.MeleeRange))
             {
-                if (hit.collider.TryGetComponent(
+                if (meleeHit.collider.TryGetComponent(
                     out IShootable shootable))
                 {
                     shootable.Hitted(
                         _handGun.Damage,
-                        hit.point
+                        meleeHit.point
                     );
                 }
             }
@@ -145,7 +147,7 @@ public class GunSystem : MonoBehaviour
             );
         }
 
-        // MUZZLE FLASH
+        // MUZZLE
         if (_muzzleFlash != null)
         {
             _muzzleFlash.Stop(
@@ -157,18 +159,20 @@ public class GunSystem : MonoBehaviour
             _muzzleFlash.Play();
         }
 
+        RaycastHit gunHit;
+
         // RAYCAST
         if (Physics.Raycast(
             _camera.position,
             _camera.forward,
-            out RaycastHit hit))
+            out gunHit))
         {
-            if (hit.collider.TryGetComponent(
+            if (gunHit.collider.TryGetComponent(
                 out IShootable shootable))
             {
                 shootable.Hitted(
                     _handGun.Damage,
-                    hit.point
+                    gunHit.point
                 );
             }
         }
