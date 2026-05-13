@@ -14,9 +14,6 @@ public class BossAnimation : MonoBehaviour
     public AudioSource bossMusic;
     private bool musicPlaying;
 
-    [Header("Vida")]
-    public bool dead = false;
-
     [Header("Visão")]
     public float viewDistance = 15f;
     public float viewAngle = 120f;
@@ -41,7 +38,8 @@ public class BossAnimation : MonoBehaviour
     public int dustPoints = 12;
     public float dustRadius = 3f;
 
-    public bool jumping;
+    private bool dead = false;
+    public bool jumping = false;
 
     private bool canJump = true;
     private bool canMelee = true;
@@ -68,7 +66,7 @@ public class BossAnimation : MonoBehaviour
 
         bool seeingPlayer = CanSeePlayer();
 
-        // TOCA MUSICA
+        // MUSICA
         if (seeingPlayer && !musicPlaying)
         {
             if (bossMusic != null)
@@ -79,7 +77,6 @@ public class BossAnimation : MonoBehaviour
             musicPlaying = true;
         }
 
-        // PARA MUSICA
         if (!seeingPlayer && musicPlaying)
         {
             if (bossMusic != null)
@@ -100,7 +97,9 @@ public class BossAnimation : MonoBehaviour
             else
             {
                 if (agent.hasPath)
+                {
                     agent.ResetPath();
+                }
             }
         }
 
@@ -229,7 +228,6 @@ public class BossAnimation : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        // DANO AREA
         Collider[] hits =
             Physics.OverlapSphere(
                 transform.position,
@@ -332,7 +330,7 @@ public class BossAnimation : MonoBehaviour
         return false;
     }
 
-    // MORTE DO BOSS
+    // MORTE
     public void BossDeath()
     {
         if (dead)
@@ -347,6 +345,7 @@ public class BossAnimation : MonoBehaviour
         canJump = false;
         canMelee = false;
 
+        // PARA NAVMESH
         if (agent.enabled)
         {
             agent.isStopped = true;
@@ -354,12 +353,9 @@ public class BossAnimation : MonoBehaviour
             agent.enabled = false;
         }
 
+        // PARA FISICA
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
-
-        anim.SetBool("Walking", false);
-
-        anim.SetTrigger("Death");
 
         // PARA MUSICA
         if (bossMusic != null)
@@ -369,7 +365,14 @@ public class BossAnimation : MonoBehaviour
 
         musicPlaying = false;
 
-        ShowVictoryAfterDeath();
+        // PARA WALK
+        anim.SetBool("Walking", false);
+
+        // ANIMAÇÃO MORTE
+        anim.SetTrigger("Die");
+
+        // VITORIA
+        Invoke(nameof(ShowVictoryAfterDeath), 4f);
     }
 
     public void ShowVictoryAfterDeath()
@@ -396,8 +399,6 @@ public class BossAnimation : MonoBehaviour
 
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
-
-        agent.enabled = false;
 
         transform.position = startPosition;
         transform.rotation = startRotation;
