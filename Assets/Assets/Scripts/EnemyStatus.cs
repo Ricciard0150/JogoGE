@@ -14,6 +14,9 @@ public class EnemyStatus : MonoBehaviour, IShootable
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Rigidbody rb;
 
+    [Header("Boss")]
+    [SerializeField] private BossAnimation bossAnimation;
+
     private float currentLife;
 
     private Vector3 startPosition;
@@ -31,22 +34,26 @@ public class EnemyStatus : MonoBehaviour, IShootable
 
     public void Hitted(float damage, Vector3 shootPoint)
     {
-        if (isDead) return;
+        if (isDead)
+            return;
 
         currentLife -= damage;
 
-        // 💉 sangue
+        // SANGUE
         if (bloodEffect != null)
         {
             GameObject blood = Instantiate(
                 bloodEffect,
                 shootPoint,
-                Quaternion.LookRotation(shootPoint - transform.position)
+                Quaternion.LookRotation(
+                    shootPoint - transform.position
+                )
             );
 
             blood.transform.SetParent(transform);
         }
 
+        // MORTE
         if (currentLife <= 0)
         {
             Die();
@@ -55,39 +62,49 @@ public class EnemyStatus : MonoBehaviour, IShootable
 
     void Die()
     {
+        if (isDead)
+            return;
+
         isDead = true;
 
-        // 🔥 parar IA
-        if (agent != null)
-            agent.enabled = false;
+        // CHAMA MORTE DO BOSS
+        if (bossAnimation != null)
+        {
+            bossAnimation.BossDeath();
+        }
 
-        // 🔥 parar física
-        if (rb != null)
-            rb.linearVelocity = Vector3.zero;
+        // DESATIVA COLISAO
+        Collider col = GetComponent<Collider>();
 
-        // 🔥 animação de morte
-        if (anim != null)
-            anim.SetTrigger("Die");
+        if (col != null)
+        {
+            col.enabled = false;
+        }
 
-        // 🔥 desativar colisão opcional
-        GetComponent<Collider>().enabled = false;
-
-        // 🔥 destrói depois da animação
-        Destroy(gameObject, 3f);
+        // DESTROI DEPOIS
+        Destroy(gameObject, 5f);
     }
 
     public void ResetBoss()
     {
         currentLife = lifeMax;
+
         isDead = false;
 
         transform.position = startPosition;
         transform.rotation = startRotation;
 
         if (agent != null)
+        {
             agent.enabled = true;
+        }
 
-        GetComponent<Collider>().enabled = true;
+        Collider col = GetComponent<Collider>();
+
+        if (col != null)
+        {
+            col.enabled = true;
+        }
 
         gameObject.SetActive(true);
     }
